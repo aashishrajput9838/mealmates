@@ -1,0 +1,6 @@
+<svg width="320" height="240" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="240" fill="#dbeafe"/>
+  <rect x="80" y="60" width="160" height="120" rx="8" fill="#60a5fa"/>
+  <circle cx="160" cy="120" r="30" fill="#3b82f6"/>
+  <text x="160" y="200" text-anchor="middle" fill="#2563eb" font-family="Arial" font-size="16">Soup</text>
+</svg>
