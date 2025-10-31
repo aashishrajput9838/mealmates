@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Upload, History, Loader2, X, Calendar, Package, RefreshCw } from "lucide-react"
+import { Timestamp } from "firebase/firestore"
 import Image from "next/image"
 import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { useAuth } from "@/contexts/AuthContext"
@@ -170,9 +171,9 @@ export default function DashboardPage() {
     }
   }
 
-  const formatDate = (date: any) => {
+  const formatDate = (date: string | Date | Timestamp) => {
     // Handle Timestamp objects from Firestore
-    if (date && typeof date.toDate === 'function') {
+    if (date instanceof Timestamp) {
       return date.toDate().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',

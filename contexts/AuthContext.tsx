@@ -68,22 +68,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       const result = await signInWithEmailAndPassword(auth, email, password);
       console.log('Sign in successful:', result.user);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Sign in error:', error);
-      console.error('Error code:', error.code);
-      console.error('Error message:', error.message);
+      const authError = error as Error & { code?: string; message?: string };
+      console.error('Error code:', authError.code);
+      console.error('Error message:', authError.message);
       
       // Provide more user-friendly error messages
-      if (error.code === 'auth/invalid-credential') {
+      if (authError.code === 'auth/invalid-credential') {
         throw new Error('Invalid email or password. Please check your credentials and try again.');
-      } else if (error.code === 'auth/user-not-found') {
+      } else if (authError.code === 'auth/user-not-found') {
         throw new Error('No user found with this email. Please check your email or sign up.');
-      } else if (error.code === 'auth/wrong-password') {
+      } else if (authError.code === 'auth/wrong-password') {
         throw new Error('Incorrect password. Please try again.');
-      } else if (error.code === 'auth/too-many-requests') {
+      } else if (authError.code === 'auth/too-many-requests') {
         throw new Error('Too many failed login attempts. Please try again later.');
       } else {
-        throw new Error(error.message || 'Failed to sign in. Please try again.');
+        throw new Error(authError.message || 'Failed to sign in. Please try again.');
       }
     }
   };
@@ -96,20 +97,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       const result = await createUserWithEmailAndPassword(auth, email, password);
       console.log('Sign up successful:', result.user);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Sign up error:', error);
-      console.error('Error code:', error.code);
-      console.error('Error message:', error.message);
+      const authError = error as Error & { code?: string; message?: string };
+      console.error('Error code:', authError.code);
+      console.error('Error message:', authError.message);
       
       // Provide more user-friendly error messages
-      if (error.code === 'auth/email-already-in-use') {
+      if (authError.code === 'auth/email-already-in-use') {
         throw new Error('An account already exists with this email address. Please sign in instead.');
-      } else if (error.code === 'auth/invalid-email') {
+      } else if (authError.code === 'auth/invalid-email') {
         throw new Error('Invalid email address. Please check your email and try again.');
-      } else if (error.code === 'auth/weak-password') {
+      } else if (authError.code === 'auth/weak-password') {
         throw new Error('Password is too weak. Please use a stronger password (at least 6 characters).');
       } else {
-        throw new Error(error.message || 'Failed to sign up. Please try again.');
+        throw new Error(authError.message || 'Failed to sign up. Please try again.');
       }
     }
   };

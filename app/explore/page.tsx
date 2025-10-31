@@ -1,6 +1,15 @@
 "use client"
 
-import { MealCard, type Meal } from "@/components/meal-card"
+import { MealCard } from "@/components/meal-card"
+
+interface Meal {
+  id: string
+  title: string
+  description: string
+  location: string
+  time: string
+  image: string
+}
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -11,33 +20,27 @@ import { MapPin } from "lucide-react"
 const meals: Meal[] = [
   {
     id: "1",
-    name: "Veggie Pasta",
-    cuisine: "Italian",
-    veg: true,
-    donor: "Green Spoon",
-    distanceKm: 1.2,
-    pickupTime: "5:00 PM",
-    imageUrl: "/veggie-pasta.png",
+    title: "Veggie Pasta",
+    description: "Delicious vegetarian pasta with fresh vegetables",
+    location: "Green Spoon",
+    time: "5:00 PM",
+    image: "/veggie-pasta.png",
   },
   {
     id: "2",
-    name: "Chicken Curry",
-    cuisine: "Indian",
-    veg: false,
-    donor: "Spice Hub",
-    distanceKm: 2.8,
-    pickupTime: "6:15 PM",
-    imageUrl: "/flavorful-chicken-curry.png",
+    title: "Chicken Curry",
+    description: "Flavorful chicken curry with rice",
+    location: "Spice Hub",
+    time: "6:15 PM",
+    image: "/flavorful-chicken-curry.png",
   },
   {
     id: "3",
-    name: "Tofu Bowl",
-    cuisine: "Asian",
-    veg: true,
-    donor: "Zen Kitchen",
-    distanceKm: 0.9,
-    pickupTime: "4:30 PM",
-    imageUrl: "/tofu-bowl.png",
+    title: "Tofu Bowl",
+    description: "Healthy tofu bowl with vegetables",
+    location: "Zen Kitchen",
+    time: "4:30 PM",
+    image: "/tofu-bowl.png",
   },
 ]
 
@@ -95,7 +98,15 @@ export default function ExplorePage() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {meals.map((m) => (
-            <MealCard key={m.id} meal={m} />
+            <MealCard 
+              key={m.id} 
+              id={m.id}
+              title={m.title}
+              description={m.description}
+              location={m.location}
+              time={m.time}
+              image={m.image}
+            />
           ))}
         </div>
 
