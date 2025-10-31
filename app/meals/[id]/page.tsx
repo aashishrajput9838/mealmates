@@ -2,13 +2,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star, Bike, Hand } from "lucide-react"
+import Image from "next/image"
 
 export default function MealDetailPage() {
   return (
     <main className="min-h-screen">
       <div className="mx-auto max-w-5xl px-4 py-8 grid lg:grid-cols-2 gap-6">
         <div className="rounded-2xl overflow-hidden shadow-soft">
-          <img src="/meal-detail.png" alt="Meal detail" className="w-full h-auto" />
+          <Image src="/meal-detail.png" alt="Meal detail" width={800} height={600} className="w-full h-auto" />
         </div>
         <div className="space-y-4">
           <h1 className="font-[var(--font-poppins)] text-3xl">Veggie Pasta from Green Spoon</h1>

@@ -30,8 +30,9 @@ export const testSignIn = async (email: string, password: string) => {
     console.log('Sign in successful');
     console.log('User:', result.user);
     return result.user;
-  } catch (error: any) {
-    console.error('Sign in failed:', error.code, error.message);
+  } catch (error) {
+    const err = error as Error & { code?: string };
+    console.error('Sign in failed:', err.code, err.message);
     throw error;
   }
 };
@@ -44,8 +45,9 @@ export const testSignUp = async (email: string, password: string) => {
     console.log('Sign up successful');
     console.log('User:', result.user);
     return result.user;
-  } catch (error: any) {
-    console.error('Sign up failed:', error.code, error.message);
+  } catch (error) {
+    const err = error as Error & { code?: string };
+    console.error('Sign up failed:', err.code, err.message);
     throw error;
   }
 };
@@ -57,8 +59,9 @@ export const testSignOut = async () => {
     await signOut(auth);
     console.log('Sign out successful');
     return true;
-  } catch (error: any) {
-    console.error('Sign out failed:', error.code, error.message);
+  } catch (error) {
+    const err = error as Error & { code?: string };
+    console.error('Sign out failed:', err.code, err.message);
     throw error;
   }
 };

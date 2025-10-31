@@ -21,8 +21,8 @@ export default function TestAuthPage() {
     try {
       const user = await testSignIn(email, password);
       setResult(`Sign in successful! User ID: ${user.uid}`);
-    } catch (err: any) {
-      setError(`Sign in failed: ${err.message}`);
+    } catch (err) {
+      setError(`Sign in failed: ${(err as Error).message}`);
     } finally {
       setLoading(false);
     }
@@ -36,8 +36,8 @@ export default function TestAuthPage() {
     try {
       const user = await testSignUp(email, password);
       setResult(`Sign up successful! User ID: ${user.uid}`);
-    } catch (err: any) {
-      setError(`Sign up failed: ${err.message}`);
+    } catch (err) {
+      setError(`Sign up failed: ${(err as Error).message}`);
     } finally {
       setLoading(false);
     }
@@ -51,8 +51,8 @@ export default function TestAuthPage() {
     try {
       await testSignOut();
       setResult('Sign out successful!');
-    } catch (err: any) {
-      setError(`Sign out failed: ${err.message}`);
+    } catch (err) {
+      setError(`Sign out failed: ${(err as Error).message}`);
     } finally {
       setLoading(false);
     }

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Upload, History, User, Loader2, X, Calendar, Package, MapPin, RefreshCw } from "lucide-react"
+import { Upload, History, Loader2, X, Calendar, Package, RefreshCw } from "lucide-react"
 import Image from "next/image"
 import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { useAuth } from "@/contexts/AuthContext"
@@ -170,14 +170,38 @@ export default function DashboardPage() {
     }
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+  const formatDate = (date: any) => {
+    // Handle Timestamp objects from Firestore
+    if (date && typeof date.toDate === 'function') {
+      return date.toDate().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    // Handle string dates
+    if (typeof date === 'string') {
+      return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    // Handle Date objects
+    if (date instanceof Date) {
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    return 'Invalid date';
   }
 
   const getStatusColor = (status: string) => {
@@ -490,7 +514,7 @@ export default function DashboardPage() {
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <Label className="text-xs text-muted-foreground">Created</Label>
-                      <p className="text-sm font-medium">{formatDate(selectedDonation.createdAt?.toDate?.() || selectedDonation.createdAt)}</p>
+                      <p className="text-sm font-medium">{formatDate(selectedDonation.createdAt)}</p>
                     </div>
                   </div>
 

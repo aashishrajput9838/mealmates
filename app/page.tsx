@@ -77,7 +77,7 @@ export default function Home() {
                 <span className="text-2xl font-bold text-primary-foreground">1</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">Share Your Food</h3>
-              <p className="text-muted-foreground">Post surplus meals or ingredients you'd like to share with your community.</p>
+              <p className="text-muted-foreground">Post surplus meals or ingredients you&apos;d like to share with your community.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">

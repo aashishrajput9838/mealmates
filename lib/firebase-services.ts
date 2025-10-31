@@ -10,7 +10,8 @@ import {
   deleteDoc,
   serverTimestamp,
   DocumentData,
-  QueryDocumentSnapshot
+  QueryDocumentSnapshot,
+  Timestamp
 } from 'firebase/firestore';
 import { db, auth } from './firebase';
 
@@ -22,8 +23,8 @@ export interface FoodDonation {
   expiryTime: string;
   quantity: number;
   status: 'available' | 'claimed' | 'expired';
-  createdAt: any;
-  updatedAt: any;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
   userId: string;
   userEmail: string;
   userName?: string;

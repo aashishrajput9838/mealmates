@@ -20,9 +20,9 @@ export default function TestFirebasePage() {
         console.log('Firestore test successful. Documents count:', snapshot.size);
         
         setStatus('Firebase connection successful!');
-      } catch (err: any) {
+      } catch (err) {
         console.error('Firebase test error:', err);
-        setError(`Firebase test failed: ${err.message}`);
+        setError(`Firebase test failed: ${(err as Error).message}`);
         setStatus('Firebase connection failed');
       }
     };

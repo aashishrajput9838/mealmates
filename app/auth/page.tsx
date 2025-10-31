@@ -63,9 +63,9 @@ export default function AuthPage() {
       }
       // Redirect to dashboard or appropriate page
       router.push("/dashboard")
-    } catch (error: any) {
+    } catch (error) {
       console.error('Authentication error:', error);
-      setError(error.message || "Authentication failed")
+      setError((error as Error).message || "Authentication failed")
     } finally {
       setLoading(false)
     }
@@ -82,9 +82,9 @@ export default function AuthPage() {
         await signInWithFacebook()
       }
       router.push("/dashboard")
-    } catch (error: any) {
+    } catch (error) {
       console.error('Social authentication error:', error);
-      setError(error.message || "Social authentication failed")
+      setError((error as Error).message || "Social authentication failed")
     } finally {
       setLoading(false)
     }
