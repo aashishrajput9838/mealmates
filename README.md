@@ -66,9 +66,28 @@ npm install
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
 2. Enable Authentication (Email/Password, Google, Facebook)
 3. Enable Firestore Database
-4. Copy your Firebase config to `lib/firebase.ts`
+4. Copy your Firebase config to `lib/firebase.ts` or create a `.env.local` file
 
-### 4. Run Development Server
+### 4. Environment Configuration
+Create a `.env.local` file in your project root with your Firebase configuration:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
+
+### 5. Test Configuration
+After setting up your environment variables, you can test your configuration by visiting:
+- http://localhost:3000/test-config (to verify Firebase setup)
+- http://localhost:3000/test-firebase (to test Firebase functions)
+- http://localhost:3000/test-auth (to test authentication)
+
+### 6. Run Development Server
 ```bash
 npm run dev
 ```
@@ -98,6 +117,10 @@ Create `.env.local` file:
 NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-domain
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
 ```
 
 ## 📱 Features Overview

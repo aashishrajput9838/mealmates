@@ -1,5 +1,42 @@
 # Firebase Authentication Troubleshooting Guide
 
+## Common Error: Missing Environment Variables
+
+This error occurs when the required Firebase configuration variables are not set in your environment. The application requires these variables to initialize Firebase properly.
+
+### Error Messages You Might See:
+```
+Warning: Missing environment variable NEXT_PUBLIC_FIREBASE_API_KEY
+Warning: Missing environment variable NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+Warning: Missing environment variable NEXT_PUBLIC_FIREBASE_PROJECT_ID
+Firebase not initialized due to missing API key
+Firebase auth is not properly initialized
+```
+
+## Solution: Set Up Environment Variables
+
+1. Create a `.env.local` file in your project root directory (if it doesn't exist)
+2. Add the following variables with your actual Firebase configuration:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
+
+## How to Get Your Firebase Configuration
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/)
+2. Select your project
+3. Click the gear icon (⚙️) next to "Project Overview" and select "Project settings"
+4. Under "General" tab, scroll down to "Your apps" section
+5. If you don't have a web app configured, click "</>" to add one
+6. Copy the configuration values to your `.env.local` file
+
 ## Common Error: `auth/invalid-credential`
 
 This error typically occurs when there's an issue with the Firebase authentication credentials. Here are the steps to diagnose and fix this issue:

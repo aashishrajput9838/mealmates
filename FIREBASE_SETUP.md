@@ -58,6 +58,7 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
 ## Step 5: Configure Authorized Domains
@@ -66,12 +67,20 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 2. Add `localhost` for development
 3. Add your production domain when deploying
 
-## Step 6: Test Authentication
+## Step 6: Test Configuration
+
+After setting up your environment variables:
 
 1. Start your development server: `npm run dev`
-2. Navigate to `/auth` page
-3. Try signing up with email/password
-4. Test Google and Facebook sign-in (if configured)
+2. Visit http://localhost:3000/test-config to verify your Firebase configuration
+3. Check that all services show as "Initialized"
+4. If any services show as "Not Initialized", double-check your environment variables
+
+## Step 7: Test Authentication
+
+1. Navigate to `/auth` page
+2. Try signing up with email/password
+3. Test Google and Facebook sign-in (if configured)
 
 ## Troubleshooting
 
