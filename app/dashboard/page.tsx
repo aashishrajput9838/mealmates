@@ -43,11 +43,12 @@ export default function DashboardPage() {
     if (user) {
       // Get user role from localStorage
       const storedRole = typeof window !== 'undefined' ? localStorage.getItem('userRole') : null
+      console.log('Stored role:', storedRole); // Debug log
       if (storedRole === 'donor' || storedRole === 'receiver') {
         setUserRole(storedRole)
       } else {
-        // Default to donor if no role is stored
-        setUserRole('donor')
+        // Default to receiver if no role is stored
+        setUserRole('receiver')
       }
       
       loadDonations()

@@ -76,6 +76,11 @@ export default function AuthPage() {
     setError("")
 
     try {
+      // Store the selected role in localStorage before social login
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('userRole', role)
+      }
+      
       if (provider === "google") {
         await signInWithGoogle()
       } else {
