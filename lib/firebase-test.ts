@@ -26,7 +26,10 @@ export const testAuthFunctions = async () => {
 export const testSignIn = async (email: string, password: string) => {
   try {
     console.log(`Attempting to sign in with email: ${email}`);
-    const result = await signInWithEmailAndPassword(auth, email, password);
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    const result = await signInWithEmailAndPassword(auth!, email, password);
     console.log('Sign in successful');
     console.log('User:', result.user);
     return result.user;
@@ -41,7 +44,10 @@ export const testSignIn = async (email: string, password: string) => {
 export const testSignUp = async (email: string, password: string) => {
   try {
     console.log(`Attempting to sign up with email: ${email}`);
-    const result = await createUserWithEmailAndPassword(auth, email, password);
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    const result = await createUserWithEmailAndPassword(auth!, email, password);
     console.log('Sign up successful');
     console.log('User:', result.user);
     return result.user;
@@ -56,7 +62,10 @@ export const testSignUp = async (email: string, password: string) => {
 export const testSignOut = async () => {
   try {
     console.log('Attempting to sign out');
-    await signOut(auth);
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    await signOut(auth!);
     console.log('Sign out successful');
     return true;
   } catch (error) {

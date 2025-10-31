@@ -15,11 +15,15 @@ export default function TestFirebasePage() {
         console.log('Firebase db object:', db);
         
         // Test Firestore connection
-        const testCollection = collection(db, 'test');
-        const snapshot = await getDocs(testCollection);
-        console.log('Firestore test successful. Documents count:', snapshot.size);
-        
-        setStatus('Firebase connection successful!');
+        if (db) {
+          const testCollection = collection(db, 'test');
+          const snapshot = await getDocs(testCollection);
+          console.log('Firestore test successful. Documents count:', snapshot.size);
+          
+          setStatus('Firebase connection successful!');
+        } else {
+          throw new Error('Firebase not initialized');
+        }
       } catch (err) {
         console.error('Firebase test error:', err);
         setError(`Firebase test failed: ${(err as Error).message}`);

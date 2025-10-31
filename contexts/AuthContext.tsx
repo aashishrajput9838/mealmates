@@ -121,6 +121,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (!auth) {
         throw new Error('Firebase auth is not initialized');
       }
+      if (!googleProvider) {
+        throw new Error('Google provider is not initialized');
+      }
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error('Google sign in error:', error);
@@ -132,6 +135,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       if (!auth) {
         throw new Error('Firebase auth is not initialized');
+      }
+      if (!facebookProvider) {
+        throw new Error('Facebook provider is not initialized');
       }
       await signInWithPopup(auth, facebookProvider);
     } catch (error) {

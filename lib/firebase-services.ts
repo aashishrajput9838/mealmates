@@ -53,9 +53,16 @@ export const convertImageToBase64 = (file: File): Promise<string> => {
 // Add new donation to Firestore
 export const addDonation = async (donation: Omit<FoodDonation, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
   try {
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
     const currentUser = auth.currentUser;
     if (!currentUser) {
       throw new Error('User not authenticated');
+    }
+
+    if (!db) {
+      throw new Error('Firebase database is not initialized');
     }
 
     const donationData = {
@@ -67,7 +74,7 @@ export const addDonation = async (donation: Omit<FoodDonation, 'id' | 'createdAt
       updatedAt: serverTimestamp(),
     };
 
-    const docRef = await addDoc(collection(db, 'donations'), donationData);
+    const docRef = await addDoc(collection(db!, 'donations'), donationData);
     return docRef.id;
   } catch (error) {
     console.error('Error adding donation:', error);
@@ -78,13 +85,20 @@ export const addDonation = async (donation: Omit<FoodDonation, 'id' | 'createdAt
 // Get all donations for the current user
 export const getUserDonations = async (): Promise<DonationWithId[]> => {
   try {
-    const currentUser = auth.currentUser;
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    const currentUser = auth!.currentUser;
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
+    if (!db) {
+      throw new Error('Firebase database is not initialized');
+    }
+
     const q = query(
-      collection(db, 'donations'),
+      collection(db!, 'donations'),
       where('userId', '==', currentUser.uid),
       orderBy('createdAt', 'desc')
     );
@@ -120,8 +134,12 @@ export const getUserDonations = async (): Promise<DonationWithId[]> => {
 // Get all available donations (for receivers)
 export const getAvailableDonations = async (): Promise<DonationWithId[]> => {
   try {
+    if (!db) {
+      throw new Error('Firebase database is not initialized');
+    }
+
     const q = query(
-      collection(db, 'donations'),
+      collection(db!, 'donations'),
       where('status', '==', 'available'),
       orderBy('createdAt', 'desc')
     );
@@ -157,12 +175,19 @@ export const getAvailableDonations = async (): Promise<DonationWithId[]> => {
 // Update donation status
 export const updateDonationStatus = async (donationId: string, status: 'available' | 'claimed' | 'expired'): Promise<void> => {
   try {
-    const currentUser = auth.currentUser;
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    const currentUser = auth!.currentUser;
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
-    const donationRef = doc(db, 'donations', donationId);
+    if (!db) {
+      throw new Error('Firebase database is not initialized');
+    }
+
+    const donationRef = doc(db!, 'donations', donationId);
     await updateDoc(donationRef, {
       status,
       updatedAt: serverTimestamp(),
@@ -176,12 +201,19 @@ export const updateDonationStatus = async (donationId: string, status: 'availabl
 // Update donation details
 export const updateDonation = async (donationId: string, updates: Partial<FoodDonation>): Promise<void> => {
   try {
-    const currentUser = auth.currentUser;
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    const currentUser = auth!.currentUser;
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
-    const donationRef = doc(db, 'donations', donationId);
+    if (!db) {
+      throw new Error('Firebase database is not initialized');
+    }
+
+    const donationRef = doc(db!, 'donations', donationId);
     await updateDoc(donationRef, {
       ...updates,
       updatedAt: serverTimestamp(),
@@ -195,13 +227,20 @@ export const updateDonation = async (donationId: string, updates: Partial<FoodDo
 // Delete donation
 export const deleteDonation = async (donationId: string): Promise<void> => {
   try {
-    const currentUser = auth.currentUser;
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    const currentUser = auth!.currentUser;
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
+    if (!db) {
+      throw new Error('Firebase database is not initialized');
+    }
+
     // Delete the document from Firestore
-    const donationRef = doc(db, 'donations', donationId);
+    const donationRef = doc(db!, 'donations', donationId);
     await deleteDoc(donationRef);
   } catch (error) {
     console.error('Error deleting donation:', error);
@@ -212,12 +251,19 @@ export const deleteDonation = async (donationId: string): Promise<void> => {
 // Claim a donation (for receivers)
 export const claimDonation = async (donationId: string): Promise<void> => {
   try {
-    const currentUser = auth.currentUser;
+    if (!auth) {
+      throw new Error('Firebase auth is not initialized');
+    }
+    const currentUser = auth!.currentUser;
     if (!currentUser) {
       throw new Error('User not authenticated');
     }
 
-    const donationRef = doc(db, 'donations', donationId);
+    if (!db) {
+      throw new Error('Firebase database is not initialized');
+    }
+
+    const donationRef = doc(db!, 'donations', donationId);
     await updateDoc(donationRef, {
       status: 'claimed',
       claimedBy: currentUser.uid,

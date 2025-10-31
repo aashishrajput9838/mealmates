@@ -1,7 +1,7 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getAnalytics } from 'firebase/analytics';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getAuth, Auth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { getFirestore, Firestore } from 'firebase/firestore';
+import { getAnalytics, Analytics } from 'firebase/analytics';
 
 // Validate that required environment variables are present
 const requiredEnvVars = [
@@ -14,9 +14,15 @@ const requiredEnvVars = [
   'NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID'
 ];
 
+// Check if we're in a build environment (Vercel)
+const isBuildEnvironment = process.env.NEXT_PHASE === 'phase-production-build';
+
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
-    console.warn(`Warning: Missing environment variable ${envVar}`);
+    // Only warn in development or runtime, not during build
+    if (!isBuildEnvironment) {
+      console.warn(`Warning: Missing environment variable ${envVar}`);
+    }
   } else {
     console.log(`Found environment variable ${envVar}: ${process.env[envVar]}`);
   }
@@ -42,20 +48,39 @@ console.log('Firebase config:', {
   measurementId: firebaseConfig.measurementId
 });
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase only if we have a valid API key
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+let analytics: Analytics | null = null;
+let googleProvider: GoogleAuthProvider | null = null;
+let facebookProvider: FacebookAuthProvider | null = null;
 
-// Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app);
+if (firebaseConfig.apiKey) {
+  // Initialize Firebase
+  app = initializeApp(firebaseConfig);
+  
+  // Initialize Firebase Authentication and get a reference to the service
+  auth = getAuth(app);
+  
+  // Initialize Firestore Database
+  db = getFirestore(app);
+  
+  // Initialize Analytics (only in browser environment)
+  analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+  
+  // Initialize providers
+  googleProvider = new GoogleAuthProvider();
+  facebookProvider = new FacebookAuthProvider();
+} else {
+  console.warn('Firebase not initialized due to missing API key');
+  // Create mock objects for build process
+  app = null;
+  auth = null;
+  db = null;
+  googleProvider = null;
+  facebookProvider = null;
+}
 
-// Initialize Firestore Database
-export const db = getFirestore(app);
-
-// Initialize Analytics (only in browser environment)
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
-
-// Initialize providers
-export const googleProvider = new GoogleAuthProvider();
-export const facebookProvider = new FacebookAuthProvider();
-
+export { app, auth, db, analytics, googleProvider, facebookProvider };
 export default app;
