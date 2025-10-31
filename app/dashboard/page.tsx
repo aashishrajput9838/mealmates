@@ -1,13 +1,11 @@
 "use client"
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Upload, History, BarChart3, User, Loader2, X, Calendar, Package, MapPin, RefreshCw } from "lucide-react"
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts"
+import { Upload, History, User, Loader2, X, Calendar, Package, MapPin, RefreshCw } from "lucide-react"
 import Image from "next/image"
 import { ProtectedRoute } from "@/components/ProtectedRoute"
 import { useAuth } from "@/contexts/AuthContext"
@@ -22,23 +20,15 @@ import {
   type DonationWithId 
 } from "@/lib/firebase-services"
 
-const sampleData = [
-  { name: "Mon", meals: 3 },
-  { name: "Tue", meals: 5 },
-  { name: "Wed", meals: 2 },
-  { name: "Thu", meals: 6 },
-  { name: "Fri", meals: 4 },
-  { name: "Sat", meals: 7 },
-]
-
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [donations, setDonations] = useState<DonationWithId[]>([])
   const [availableDonations, setAvailableDonations] = useState<DonationWithId[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
   const [selectedDonation, setSelectedDonation] = useState<DonationWithId | null>(null)
   const [showViewModal, setShowViewModal] = useState(false)
+  const [userRole, setUserRole] = useState<"donor" | "receiver">("donor")
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -47,9 +37,18 @@ export default function DashboardPage() {
     imageData: ''
   })
 
-  // Load donations on component mount
+  // Load user role and donations on component mount
   useEffect(() => {
     if (user) {
+      // Get user role from localStorage
+      const storedRole = typeof window !== 'undefined' ? localStorage.getItem('userRole') : null
+      if (storedRole === 'donor' || storedRole === 'receiver') {
+        setUserRole(storedRole)
+      } else {
+        // Default to donor if no role is stored
+        setUserRole('donor')
+      }
+      
       loadDonations()
       loadAvailableDonations()
     }
@@ -201,20 +200,23 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-6">
             <h1 className="font-[var(--font-poppins)] text-3xl">Dashboard</h1>
             <div className="flex items-center gap-3">
-              <User className="h-5 w-5 text-muted-foreground" />
               <span className="text-muted-foreground">
                 Welcome back, {user?.displayName || user?.email?.split('@')[0] || 'User'}!
               </span>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => logout()}
+                className="rounded-2xl"
+              >
+                Sign Out
+              </Button>
             </div>
           </div>
           
-          <Tabs defaultValue="donor">
-            <TabsList className="mb-6">
-              <TabsTrigger value="donor">Donor</TabsTrigger>
-              <TabsTrigger value="receiver">Receiver</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="donor" className="space-y-6">
+          {userRole === 'donor' ? (
+            // Donor view - show only donor section
+            <div className="space-y-6">
               <Card className="rounded-2xl shadow-soft">
                 <CardHeader>
                   <CardTitle className="font-[var(--font-poppins)]">Add Surplus Food</CardTitle>
@@ -297,7 +299,7 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-1 gap-6">
                 <Card className="rounded-2xl shadow-soft">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="font-[var(--font-poppins)] flex items-center gap-2">
@@ -369,77 +371,57 @@ export default function DashboardPage() {
                     )}
                   </CardContent>
                 </Card>
-
-                <Card className="rounded-2xl shadow-soft">
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="font-[var(--font-poppins)] flex items-center gap-2">
-                      <BarChart3 className="h-5 w-5" />
-                      Weekly Analytics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="h-56">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={sampleData}>
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Bar dataKey="meals" fill="var(--mm-primary)" radius={[8, 8, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
               </div>
-            </TabsContent>
-
-            <TabsContent value="receiver" className="space-y-6">
-              <Card className="rounded-2xl shadow-soft">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="font-[var(--font-poppins)]">Available Meals</CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={loadAvailableDonations}
-                    className="h-8 px-3"
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Refresh
-                  </Button>
-                </CardHeader>
-                <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {availableDonations.length === 0 ? (
-                    <div className="col-span-full text-center py-12 text-muted-foreground">
-                      <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                      <p className="text-lg font-medium">No meals available</p>
-                      <p className="text-sm">Check back later for new donations</p>
-                    </div>
-                  ) : (
-                    availableDonations.map((donation) => (
-                      <div key={donation.id} className="rounded-2xl border p-4 hover:shadow-md transition-shadow">
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-3">
-                          <Image
-                            src={donation.imageData}
-                            alt={donation.title}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div className="font-[var(--font-poppins)] font-medium mb-1">{donation.title}</div>
-                        <div className="text-sm text-muted-foreground mb-3">
-                          {donation.userName || 'Anonymous'} • {donation.quantity} serving{donation.quantity > 1 ? 's' : ''}
-                        </div>
-                        <Button 
-                          className="w-full rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground"
-                          onClick={() => handleViewDonation(donation)}
-                        >
-                          View Details
-                        </Button>
+            </div>
+          ) : (
+            // Receiver view - show only receiver section
+            <Card className="rounded-2xl shadow-soft">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="font-[var(--font-poppins)]">Available Meals</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={loadAvailableDonations}
+                  className="h-8 px-3"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Refresh
+                </Button>
+              </CardHeader>
+              <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {availableDonations.length === 0 ? (
+                  <div className="col-span-full text-center py-12 text-muted-foreground">
+                    <Package className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium">No meals available</p>
+                    <p className="text-sm">Check back later for new donations</p>
+                  </div>
+                ) : (
+                  availableDonations.map((donation) => (
+                    <div key={donation.id} className="rounded-2xl border p-4 hover:shadow-md transition-shadow">
+                      <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-3">
+                        <Image
+                          src={donation.imageData}
+                          alt={donation.title}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
-                    ))
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                      <div className="font-[var(--font-poppins)] font-medium mb-1">{donation.title}</div>
+                      <div className="text-sm text-muted-foreground mb-3">
+                        {donation.userName || 'Anonymous'} • {donation.quantity} serving{donation.quantity > 1 ? 's' : ''}
+                      </div>
+                      <Button 
+                        className="w-full rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground"
+                        onClick={() => handleViewDonation(donation)}
+                      >
+                        View Details
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* View Donation Modal */}

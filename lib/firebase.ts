@@ -3,15 +3,44 @@ import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth
 import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 
+// Validate that required environment variables are present
+const requiredEnvVars = [
+  'NEXT_PUBLIC_FIREBASE_API_KEY',
+  'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
+  'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
+  'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
+  'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
+  'NEXT_PUBLIC_FIREBASE_APP_ID',
+  'NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID'
+];
+
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    console.warn(`Warning: Missing environment variable ${envVar}`);
+  } else {
+    console.log(`Found environment variable ${envVar}: ${process.env[envVar]}`);
+  }
+}
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDoPE2smc_MeZplbW2022EF9ba_0at7E2s",
-  authDomain: "mealmates-f6f74.firebaseapp.com",
-  projectId: "mealmates-f6f74",
-  storageBucket: "mealmates-f6f74.firebasestorage.app",
-  messagingSenderId: "467406988910",
-  appId: "1:467406988910:web:9596c80aa3ee25b42ea87f",
-  measurementId: "G-6X7D0Z23VQ"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
+
+// Log the firebase config (without sensitive data) for debugging
+console.log('Firebase config:', {
+  authDomain: firebaseConfig.authDomain,
+  projectId: firebaseConfig.projectId,
+  storageBucket: firebaseConfig.storageBucket,
+  messagingSenderId: firebaseConfig.messagingSenderId,
+  appId: firebaseConfig.appId,
+  measurementId: firebaseConfig.measurementId
+});
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

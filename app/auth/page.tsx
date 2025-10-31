@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,6 +12,15 @@ import { useAuth } from "@/contexts/AuthContext"
 import { Loader2 } from "lucide-react"
 
 export default function AuthPage() {
+  // Add environment variable check
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Firebase API Key:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? 'Loaded' : 'Missing');
+      console.log('Firebase Auth Domain:', process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ? 'Loaded' : 'Missing');
+      console.log('Firebase Project ID:', process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ? 'Loaded' : 'Missing');
+    }
+  }, []);
+
   const params = useSearchParams()
   const router = useRouter()
   const { signIn, signUp, signInWithGoogle, signInWithFacebook } = useAuth()
@@ -41,14 +50,21 @@ export default function AuthPage() {
     setError("")
 
     try {
+      console.log('Form submitted with data:', formData);
+      console.log('Login mode:', isLogin);
       if (isLogin) {
         await signIn(formData.email, formData.password)
       } else {
         await signUp(formData.email, formData.password)
+        // Store the user's role in localStorage upon signup
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('userRole', role)
+        }
       }
       // Redirect to dashboard or appropriate page
       router.push("/dashboard")
     } catch (error: any) {
+      console.error('Authentication error:', error);
       setError(error.message || "Authentication failed")
     } finally {
       setLoading(false)
@@ -67,6 +83,7 @@ export default function AuthPage() {
       }
       router.push("/dashboard")
     } catch (error: any) {
+      console.error('Social authentication error:', error);
       setError(error.message || "Social authentication failed")
     } finally {
       setLoading(false)

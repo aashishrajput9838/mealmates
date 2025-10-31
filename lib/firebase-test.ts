@@ -1,45 +1,64 @@
-// This file is for testing Firebase connection
-// You can run this in the browser console to test if Firebase is working
+import { auth } from './firebase';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  signOut
+} from 'firebase/auth';
 
-import { auth, googleProvider, facebookProvider } from './firebase';
-
-export function testFirebaseConnection() {
-  console.log('Testing Firebase connection...');
+// Test function to verify Firebase authentication
+export const testAuthFunctions = async () => {
+  console.log('Testing Firebase Authentication Functions');
+  console.log('=====================================');
   
-  try {
-    // Test if auth is initialized
-    console.log('✅ Firebase Auth initialized:', !!auth);
-    console.log('✅ Google Provider initialized:', !!googleProvider);
-    console.log('✅ Facebook Provider initialized:', !!facebookProvider);
-    
-    // Test if we can access Firebase config
-    console.log('✅ Firebase project ID:', auth.app.options.projectId);
-    console.log('✅ Firebase auth domain:', auth.app.options.authDomain);
-    
-    return true;
-  } catch (error) {
-    console.error('❌ Firebase connection failed:', error);
+  // Check if auth is initialized
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
     return false;
   }
-}
-
-// Test authentication state listener
-export function testAuthStateListener() {
-  console.log('Testing auth state listener...');
   
+  console.log('Firebase Auth initialized successfully');
+  console.log('Current user:', auth.currentUser);
+  
+  return true;
+};
+
+// Test sign in function
+export const testSignIn = async (email: string, password: string) => {
   try {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log('✅ User is signed in:', user.email);
-      } else {
-        console.log('✅ User is signed out');
-      }
-    });
-    
-    // Return unsubscribe function
-    return unsubscribe;
-  } catch (error) {
-    console.error('❌ Auth state listener failed:', error);
-    return null;
+    console.log(`Attempting to sign in with email: ${email}`);
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    console.log('Sign in successful');
+    console.log('User:', result.user);
+    return result.user;
+  } catch (error: any) {
+    console.error('Sign in failed:', error.code, error.message);
+    throw error;
   }
-}
+};
+
+// Test sign up function
+export const testSignUp = async (email: string, password: string) => {
+  try {
+    console.log(`Attempting to sign up with email: ${email}`);
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    console.log('Sign up successful');
+    console.log('User:', result.user);
+    return result.user;
+  } catch (error: any) {
+    console.error('Sign up failed:', error.code, error.message);
+    throw error;
+  }
+};
+
+// Test sign out function
+export const testSignOut = async () => {
+  try {
+    console.log('Attempting to sign out');
+    await signOut(auth);
+    console.log('Sign out successful');
+    return true;
+  } catch (error: any) {
+    console.error('Sign out failed:', error.code, error.message);
+    throw error;
+  }
+};
