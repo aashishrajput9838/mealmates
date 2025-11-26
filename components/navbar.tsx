@@ -90,6 +90,12 @@ export function Navbar() {
                       Profile
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/read-database" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      Read Database
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />

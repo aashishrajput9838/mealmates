@@ -27,7 +27,16 @@ A modern, full-stack web application for connecting food donors with recipients,
 mealmates/
 ├── app/                    # Next.js App Router
 │   ├── auth/             # Authentication pages
+│   ├── chat/             # Messaging functionality
 │   ├── dashboard/        # User dashboard
+│   ├── explore/          # Community food browsing
+│   ├── impact/           # Impact statistics
+│   ├── meals/[id]/       # Individual meal details
+│   ├── profile/          # User profile
+│   ├── read-database/    # Database testing
+│   ├── test-auth/        # Authentication testing
+│   ├── test-config/      # Configuration testing
+│   ├── test-firebase/    # Firebase testing
 │   ├── globals.css       # Global styles
 │   ├── layout.tsx        # Root layout
 │   └── page.tsx          # Home page
@@ -35,12 +44,17 @@ mealmates/
 │   ├── ui/               # shadcn/ui components
 │   ├── ImageUpload.tsx   # Image upload component
 │   ├── Navbar.tsx        # Navigation bar
+│   ├── Footer.tsx        # Footer component
+│   ├── MealCard.tsx      # Meal display component
+│   ├── StatsCounters.tsx # Statistics display
+│   ├── AuthRedirect.tsx  # Authentication redirection
 │   └── ProtectedRoute.tsx # Route protection
 ├── contexts/              # React contexts
 │   └── AuthContext.tsx   # Authentication context
 ├── lib/                   # Utility libraries
 │   ├── firebase.ts       # Firebase configuration
-│   └── firebase-services.ts # Firestore services
+│   ├── firebase-services.ts # Firestore services
+│   └── utils.ts          # Helper functions
 └── public/                # Static assets
 ```
 
@@ -66,7 +80,8 @@ npm install
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
 2. Enable Authentication (Email/Password, Google, Facebook)
 3. Enable Firestore Database
-4. Copy your Firebase config to `lib/firebase.ts` or create a `.env.local` file
+4. Configure Firebase security rules for Firestore (see FIRESTORE_SETUP.md)
+5. Copy your Firebase config to `lib/firebase.ts` or create a `.env.local` file
 
 ### 4. Environment Configuration
 Create a `.env.local` file in your project root with your Firebase configuration:
@@ -86,6 +101,8 @@ After setting up your environment variables, you can test your configuration by 
 - http://localhost:3000/test-config (to verify Firebase setup)
 - http://localhost:3000/test-firebase (to test Firebase functions)
 - http://localhost:3000/test-auth (to test authentication)
+
+Refer to FIREBASE_TROUBLESHOOTING.md if you encounter any issues.
 
 ### 6. Run Development Server
 ```bash
